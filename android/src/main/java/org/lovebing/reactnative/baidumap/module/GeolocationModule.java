@@ -66,6 +66,8 @@ public class GeolocationModule extends BaseModule
         option.setIsNeedAltitude(true);
         option.setIsNeedLocationDescribe(true);
         option.setOpenGps(true);
+        //add poi
+        option.setIsNeedLocationPoiList(true);
         locationClient = new LocationClient(context.getApplicationContext());
         locationClient.setLocOption(option);
         Log.i("locationClient", "locationClient");
@@ -180,8 +182,15 @@ public class GeolocationModule extends BaseModule
         params.putString("streetNumber", bdLocation.getStreetNumber());
         params.putString("buildingId", bdLocation.getBuildingID());
         params.putString("buildingName", bdLocation.getBuildingName());
+        if(bdLocation.getPoiList().size() > 0){
+            List<Poi> list = bdLocation.getPoiList();
+            params.putString("poiName", list.get(0).getName());
+            params.putString("poiAddr", list.get(0).getAddr());
+            params.putString("poiId", list.get(0).getId());
+            params.putString("poiTags", list.get(0).getTags());
+            params.putDouble("poiRank", list.get(0).getRank());
+        }
         Log.i("onReceiveLocation", "onGetCurrentLocationPosition");
-
         if (locateOnce) {
             locating = false;
             sendEvent("onGetCurrentLocationPosition", params);
